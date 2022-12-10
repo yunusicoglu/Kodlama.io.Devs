@@ -6,8 +6,12 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import Kodlama.io.Devs.business.abstracts.LanguageService;
-import Kodlama.io.Devs.business.requests.CreateLanguagesRequest;
-import Kodlama.io.Devs.business.responses.GetAllLanguagesResponse;
+import Kodlama.io.Devs.business.requests.language.CreateLanguageRequest;
+import Kodlama.io.Devs.business.requests.language.DeleteLanguageRequest;
+import Kodlama.io.Devs.business.requests.language.GetByIdLanguageRequest;
+import Kodlama.io.Devs.business.requests.language.UpdateLanguageRequest;
+import Kodlama.io.Devs.business.responses.language.GetAllLanguagesResponse;
+import Kodlama.io.Devs.business.responses.language.GetByIdLanguageResponse;
 import Kodlama.io.Devs.dataAccess.abstracts.LanguageRepository;
 import Kodlama.io.Devs.entities.concretes.Language;
 
@@ -40,7 +44,7 @@ public class LanguageManager implements LanguageService{
 	}
 
 	@Override
-	public void add(CreateLanguagesRequest createLanguageRequest) {
+	public void add(CreateLanguageRequest createLanguageRequest) {
 		
 		Language language = new Language();
 		language.setName(createLanguageRequest.getName());
@@ -48,5 +52,50 @@ public class LanguageManager implements LanguageService{
 		this.languageRepository.save(language);
 		
 	}
+
+	@Override
+	public void delete(DeleteLanguageRequest deleteLanguageRequest) {
+		this.languageRepository.deleteById(deleteLanguageRequest.getId());
+		
+		
+	}
+
+	
+
+	
+	@Override
+	public GetByIdLanguageResponse getById(GetByIdLanguageRequest getByIdLanguagesRequest) {
+		List<Language> languages = languageRepository.findAll();
+		GetByIdLanguageResponse response = new GetByIdLanguageResponse();
+		
+		for (Language language : languages) {
+			if(language.getId()==getByIdLanguagesRequest.getId()) {
+				response.setId(language.getId());
+				response.setName(language.getName());
+			}
+		}
+		
+		return response;
+	}
+
+	@Override
+	public void update(UpdateLanguageRequest updateLanguageRequest) {
+		
+		Language language = languageRepository.getReferenceById(updateLanguageRequest.getId());
+		language.setName(updateLanguageRequest.getName());
+		
+		this.languageRepository.save(language);
+		
+	}
+
+	@Override
+	public void deleteAll() {
+		this.languageRepository.deleteAll();
+		
+	}
+
+	
+
+	
 
 }
