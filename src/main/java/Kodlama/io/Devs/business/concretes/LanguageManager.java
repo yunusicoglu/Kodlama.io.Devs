@@ -7,8 +7,6 @@ import org.springframework.stereotype.Service;
 
 import Kodlama.io.Devs.business.abstracts.LanguageService;
 import Kodlama.io.Devs.business.requests.language.CreateLanguageRequest;
-import Kodlama.io.Devs.business.requests.language.DeleteLanguageRequest;
-import Kodlama.io.Devs.business.requests.language.GetByIdLanguageRequest;
 import Kodlama.io.Devs.business.requests.language.UpdateLanguageRequest;
 import Kodlama.io.Devs.business.responses.language.GetAllLanguagesResponse;
 import Kodlama.io.Devs.business.responses.language.GetByIdLanguageResponse;
@@ -34,7 +32,7 @@ public class LanguageManager implements LanguageService{
 		for (Language language : languages) {
 			GetAllLanguagesResponse response = new GetAllLanguagesResponse();
 			response.setId(language.getId());
-			response.setName(language.getName());
+			response.setLanguageName(language.getLanguageName());
 			languageResponse.add(response);
 			
 		}
@@ -47,34 +45,24 @@ public class LanguageManager implements LanguageService{
 	public void add(CreateLanguageRequest createLanguageRequest) {
 		
 		Language language = new Language();
-		language.setName(createLanguageRequest.getName());
+		language.setLanguageName(createLanguageRequest.getLanguageName());
 		
 		this.languageRepository.save(language);
-		
 	}
 
 	@Override
-	public void delete(DeleteLanguageRequest deleteLanguageRequest) {
-		this.languageRepository.deleteById(deleteLanguageRequest.getId());
-		
-		
+	public void delete(int id) {
+		this.languageRepository.deleteById(id);
 	}
 
-	
-
-	
 	@Override
-	public GetByIdLanguageResponse getById(GetByIdLanguageRequest getByIdLanguagesRequest) {
-		List<Language> languages = languageRepository.findAll();
+	public GetByIdLanguageResponse getById(int id) {
+	
+		Language language = this.languageRepository.findById(id).orElseThrow(); //bulamazsan hata fırlat
 		GetByIdLanguageResponse response = new GetByIdLanguageResponse();
 		
-		for (Language language : languages) {
-			if(language.getId()==getByIdLanguagesRequest.getId()) {
-				response.setId(language.getId());
-				response.setName(language.getName());
-			}
-		}
-		
+		response.setId(language.getId());
+		response.setLanguageName(language.getLanguageName());
 		return response;
 	}
 
@@ -82,7 +70,7 @@ public class LanguageManager implements LanguageService{
 	public void update(UpdateLanguageRequest updateLanguageRequest) {
 		
 		Language language = languageRepository.getReferenceById(updateLanguageRequest.getId());
-		language.setName(updateLanguageRequest.getName());
+		language.setLanguageName(updateLanguageRequest.getLanguageName());
 		
 		this.languageRepository.save(language);
 		
