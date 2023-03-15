@@ -2,6 +2,8 @@ package Kodlama.io.Devs.webApi.controllers;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,7 +35,7 @@ public class LanguagesController {
 	}
 	
 	@PostMapping
-	public void add(@RequestBody CreateLanguageRequest createLanguageRequest) {
+	public void add(@RequestBody @Valid CreateLanguageRequest createLanguageRequest) {
 		this.languageService.add(createLanguageRequest);
 	}
 	
@@ -49,11 +51,11 @@ public class LanguagesController {
 	}
 	
 	@PutMapping
-	public void update(@RequestBody UpdateLanguageRequest updateLanguageRequest) {
+	public void update(@RequestBody @Valid UpdateLanguageRequest updateLanguageRequest) {
 		this.languageService.update(updateLanguageRequest);
 	}
 	
-	@DeleteMapping("")
+	@DeleteMapping("deleteAll")
 	public void deleteAll() {
 		this.languageService.deleteAll();
 	}

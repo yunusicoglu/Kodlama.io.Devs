@@ -2,6 +2,9 @@ package Kodlama.io.Devs.webApi.controllers;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
+import Kodlama.io.Devs.business.responses.languageTechnology.GetByIdLanguageTechnologyResponse;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,7 +27,7 @@ public class LanguageTechnologiesController {
 	LanguageTechnologyService languageTechnologyService;
 	
 	@PostMapping
-	public void add(@RequestBody CreateLanguageTechnologyRequest createLanguageTechnologyRequest) {
+	public void add(@RequestBody @Valid CreateLanguageTechnologyRequest createLanguageTechnologyRequest) {
 		languageTechnologyService.add(createLanguageTechnologyRequest);
 	}
 	
@@ -32,6 +35,9 @@ public class LanguageTechnologiesController {
 	public List<GetAllLanguageTechnologiesResponse> getAll() {
 		return languageTechnologyService.getAll();
 	}
+
+	@GetMapping("{id}")
+	public GetByIdLanguageTechnologyResponse getById(@PathVariable int id){return languageTechnologyService.getById(id);}
 	
 	@DeleteMapping("{id}")
 	public void delete(@PathVariable int id) {
@@ -39,7 +45,7 @@ public class LanguageTechnologiesController {
 	}
 	
 	@PutMapping
-	public void update(UpdateLanguageTechnologyRequest updateLanguageTechnologyRequest) {
+	public void update(@RequestBody @Valid UpdateLanguageTechnologyRequest updateLanguageTechnologyRequest) {
 		languageTechnologyService.update(updateLanguageTechnologyRequest);
 	}
 }
