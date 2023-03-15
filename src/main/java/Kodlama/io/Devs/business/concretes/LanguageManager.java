@@ -29,10 +29,9 @@ public class LanguageManager implements LanguageService{
 	public List<GetAllLanguagesResponse> getAll() {
 		
 		List<Language> languages = languageRepository.findAll();
-		List<GetAllLanguagesResponse> languageResponse = languages.stream().map(language -> modelMapperService.forResponse()
+
+		return languages.stream().map(language -> modelMapperService.forResponse()
 				.map(language, GetAllLanguagesResponse.class)).collect(Collectors.toList());
-		
-		return languageResponse; 
 		
 	}
 
