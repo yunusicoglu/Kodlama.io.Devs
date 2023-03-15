@@ -3,6 +3,8 @@ package Kodlama.io.Devs.business.concretes;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import Kodlama.io.Devs.business.responses.language.GetByIdLanguageResponse;
+import Kodlama.io.Devs.business.responses.languageTechnology.GetByIdLanguageTechnologyResponse;
 import org.springframework.stereotype.Service;
 
 import Kodlama.io.Devs.business.abstracts.LanguageTechnologyService;
@@ -40,6 +42,15 @@ public class LanguageTechnologyManager implements LanguageTechnologyService{
 		
 		return responses;
 	}
+
+	@Override
+	public GetByIdLanguageTechnologyResponse getById(int id) {
+		LanguageTechnology languageTechnology = languageTechnologyRepository.findById(id).orElseThrow();
+		GetByIdLanguageTechnologyResponse response = modelMapperService.forResponse().map(languageTechnology, GetByIdLanguageTechnologyResponse.class);
+		return response;
+
+	}
+
 
 	@Override
 	public void delete(int id) {

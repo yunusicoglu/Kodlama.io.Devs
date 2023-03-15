@@ -2,7 +2,9 @@ package Kodlama.io.Devs.business.concretes;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import Kodlama.io.Devs.core.utilities.mappers.ModelMapperService;
 import org.springframework.stereotype.Service;
 
 import Kodlama.io.Devs.business.abstracts.LanguageService;
@@ -10,32 +12,25 @@ import Kodlama.io.Devs.business.requests.language.CreateLanguageRequest;
 import Kodlama.io.Devs.business.requests.language.UpdateLanguageRequest;
 import Kodlama.io.Devs.business.responses.language.GetAllLanguagesResponse;
 import Kodlama.io.Devs.business.responses.language.GetByIdLanguageResponse;
+import Kodlama.io.Devs.business.rules.LanguageBusinessRules;
 import Kodlama.io.Devs.dataAccess.abstracts.LanguageRepository;
 import Kodlama.io.Devs.entities.concretes.Language;
+import lombok.AllArgsConstructor;
 
 @Service
+@AllArgsConstructor
 public class LanguageManager implements LanguageService{
 
 	private LanguageRepository languageRepository;
-	
-	public LanguageManager(LanguageRepository languageRepository) {
-		
-		this.languageRepository = languageRepository;
-	}
+	private LanguageBusinessRules languageBusinessRules;
+	private ModelMapperService modelMapperService;
 
 	@Override
 	public List<GetAllLanguagesResponse> getAll() {
 		
 		List<Language> languages = languageRepository.findAll();
-		List<GetAllLanguagesResponse> languageResponse = new ArrayList<GetAllLanguagesResponse>();
-		
-		for (Language language : languages) {
-			GetAllLanguagesResponse response = new GetAllLanguagesResponse();
-			response.setId(language.getId());
-			response.setLanguageName(language.getLanguageName());
-			languageResponse.add(response);
-			
-		}
+		List<GetAllLanguagesResponse> languageResponse = languages.stream().map(language -> modelMapperService.forResponse()
+				.map(language, GetAllLanguagesResponse.class)).collect(Collectors.toList());
 		
 		return languageResponse; 
 		
@@ -43,6 +38,8 @@ public class LanguageManager implements LanguageService{
 
 	@Override
 	public void add(CreateLanguageRequest createLanguageRequest) {
+		
+		languageBusinessRules.checkIfLanguageNameExists(createLanguageRequest.getLanguageName());
 		
 		Language language = new Language();
 		language.setLanguageName(createLanguageRequest.getLanguageName());
@@ -59,10 +56,8 @@ public class LanguageManager implements LanguageService{
 	public GetByIdLanguageResponse getById(int id) {
 	
 		Language language = this.languageRepository.findById(id).orElseThrow(); //bulamazsan hata fırlat
-		GetByIdLanguageResponse response = new GetByIdLanguageResponse();
-		
-		response.setId(language.getId());
-		response.setLanguageName(language.getLanguageName());
+		GetByIdLanguageResponse response = modelMapperService.forResponse().map(language, GetByIdLanguageResponse.class);
+
 		return response;
 	}
 
