@@ -55,9 +55,8 @@ public class LanguageManager implements LanguageService{
 	public GetByIdLanguageResponse getById(int id) {
 	
 		Language language = this.languageRepository.findById(id).orElseThrow(); //bulamazsan hata fırlat
-		GetByIdLanguageResponse response = modelMapperService.forResponse().map(language, GetByIdLanguageResponse.class);
 
-		return response;
+		return modelMapperService.forResponse().map(language, GetByIdLanguageResponse.class);
 	}
 
 	@Override
